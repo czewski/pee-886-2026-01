@@ -12,7 +12,6 @@ setup(
     name='qml',
     version='1.0.0',
     license='GPL-3.0',
-    #description='novacula orquestrator',
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(),

@@ -4,7 +4,7 @@ This directory is dedicated to the student's individual implementation. Here you
 
 ## 📜 Contribution Rules (Reminder)
 1. **Naming Convention**: All files must use `snake_case` (lowercase letters and underscores). Ex: `my_model.py`.
-2. **Location**: Work only within the folders identified with your letter (📁 `qml/<letter>/`, 📁 `notebooks/<letter>/`, 📁 `scripts/<letter>/`).
+2. **Location**: Work only within the folders identified with your letter (📁 `qml/<letter>/`, 📁 `notebooks/<letter>/`, 📁 `scripts/<letter>/`, 📁 `data/<letter>/`).
 3. **Dependencies**: Add new packages only to the `requirements.txt` file at the root of the repository.
 
 ## 🛠️ About this Implementation

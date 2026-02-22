@@ -31,10 +31,6 @@ def setup_logs( name , level="INFO"):
     )
     
     
-from . import exceptions
-__all__.extend( exceptions.__all__ )
-from .exceptions import *
-
 from . import a
 __all__.extend( a.__all__ )
 from .a import *

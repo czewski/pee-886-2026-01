@@ -1,5 +1,7 @@
 # ⚛️ PEE886 - Quantum Machine Learning
 
+[![Python Module Import Check](https://github.com/jodafons/pee-886-2026-01/actions/workflows/import_check.yml/badge.svg)](https://github.com/jodafons/pee-886-2026-01/actions/workflows/import_check.yml)
+
 Welcome to the official repository of the **PEE886 - Quantum Machine Learning** course. This space is designed to organize implementations, experiments, and discoveries from students throughout the course.
 
 ---
@@ -15,6 +17,10 @@ The project follows a modular structure where each student has their own "worksp
 ├── 📁 notebooks/          # 📓 Jupyter Notebooks with demonstrations and lessons
 │   ├── 📁 a/              # 👤 Student A Notebooks
 │   ├── 📁 b/              # 👤 Student B Notebooks
+│   └── ...
+├── 📁 data/               # 💾 Raw data, configurations, and exports
+│   ├── 📁 a/              # 👤 Student A data and configs
+│   ├── 📁 b/              # 👤 Student B data and configs
 │   └── ...
 ├── 📁 qml/                # 🧠 Main module for Quantum Machine Learning
 │   ├── 📁 a/              # 👤 Student A Implementation
@@ -55,6 +61,7 @@ Each student has an identifying letter (e.g., `a`, `b`, `c`). You must work **ex
 - 📁 `qml/<letter>/`
 - 📁 `notebooks/<letter>/`
 - 📁 `scripts/<letter>/`
+- 📁 `data/<letter>/`
 
 📌 **Important**: Each student module (`qml/<letter>/`) contains its own **README.md**. It is mandatory for students to fill out this file explaining:
 - Architecture and technologies used.
@@ -74,6 +81,19 @@ Each student has an identifying letter (e.g., `a`, `b`, `c`). You must work **ex
 
 ### 🛠️ Implementation Standard
 Each student must implement all their experiment requirements within their respective lettered folder, respecting the recommended internal sub-organization (`loaders`, `models`, `trainer`, etc.).
+
+---
+
+## 🔄 Collaboration Workflow
+
+To contribute to this repository, follow these steps:
+
+1. **Fork the Repository**: All students must create a fork of this repository to their own GitHub accounts.
+2. **Implement Changes**: Work on your implementation within your assigned lettered folders.
+3. **Submit a Pull Request (PR)**: Once your implementation is ready and tested, submit a PR to the main repository.
+4. **Detailed Description**: All PRs **must** include a comprehensive description of the changes made, the logic implemented, and any results obtained.
+5. **Automated Checks (CI)**: Every Pull Request and commit will trigger an automated check to verify that the modules can be imported without errors. Ensure your implementation doesn't break the main `qml` package.
+6. **Review Process**: A selected student will be responsible for analyzing and reviewing all submitted Pull Requests to ensure they meet the course standards and follow the contribution rules.
 
 ---
 
@@ -104,6 +124,35 @@ To start Jupyter Lab with the configured environment, use:
 ```bash
 make jupyter
 ```
+
+---
+
+## ⚠️ Troubleshooting: Import Errors
+
+Since this is a collaborative repository, an error in one student's module might prevent the entire `qml` package from being imported. 
+
+If you encounter an `ImportError` or any execution error caused by another student's code (e.g., student **B** has a bug and you are student **A**), you can temporarily disable their module:
+
+1. Open `qml/__init__.py`.
+2. Locate the import section for the problematic student.
+3. Comment out the lines related to that student.
+
+**Example:**
+If Student **B**'s code is broken:
+```python
+# In qml/__init__.py
+
+from . import a
+__all__.extend( a.__all__ )
+from .a import *
+
+# Comment these if B is broken:
+# from . import b
+# __all__.extend( b.__all__ )
+# from .b import *
+```
+
+This will allow you to continue working on your own implementation without being blocked by external bugs. **Do not forget to uncomment it once the issue is resolved!**
 
 ---
 
