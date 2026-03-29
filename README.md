@@ -70,21 +70,14 @@ Each student has a dedicated space for their implementation. Click on the corres
 
 ### Aprendizado de Máquina Quântico Híbrido
 
-- [👤 Group 01](./qml/group_works/group_01/README.md)
-- [👤 Group 02](./qml/group_works/group_02/README.md)
-- [👤 Group 03](./qml/group_works/group_03/README.md)
-- [👤 Group 04](./qml/group_works/group_04/README.md)
-- [👤 Group 05](./qml/group_works/group_05/README.md)
-- [👤 Group 06](./qml/group_works/group_06/README.md)
+- [👤 Group 01](./qml/group_works/group_01/README.md): Aprendizado de Máquina Quântico Híbrido
+- [👤 Group 02](./qml/group_works/group_02/README.md): Redes Neurais Convolucionais Quânticas (QCNN)
+- [👤 Group 03](./qml/group_works/group_03/README.md): Redes Neurais Quânticas Variacionais (VQAs)
+- [👤 Group 04](./qml/group_works/group_04/README.md): Redes Adversárias Generativas Quânticas (QGANs)
+- [👤 Group 05](./qml/group_works/group_05/README.md): Máquinas de Vetores de Suporte Quânticas (QSVM)
+- [👤 Group 06](./qml/group_works/group_06/README.md): Técnicas de Encoding Quântico e Carregamento de Dados
 
-Where each group has the following topics:
 
-- Group 1: Aprendizado de Máquina Quântico Híbrido
-- Group 2: Redes Neurais Convolucionais Quânticas (QCNN)
-- Group 3: Redes Neurais Quânticas Variacionais (VQAs)
-- Group 4: Redes Adversárias Generativas Quânticas (QGANs)
-- Group 5: Máquinas de Vetores de Suporte Quânticas (QSVM)
-- Group 6: Técnicas de Encoding Quântico e Carregamento de Dados
 
 ## 📜 Contribution Rules
 
