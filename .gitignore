@@ -2,6 +2,10 @@
 __pycache__/
 *.py[codz]
 *$py.class
+outputs/
+*.png
+*.sh
+data/
 
 # C extensions
 *.so
