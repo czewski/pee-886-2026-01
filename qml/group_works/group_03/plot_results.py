@@ -82,29 +82,30 @@ def _plot_training_curves(folds, out_dir: Path):
     epochs_loss = np.arange(1, train_stack.shape[1] + 1)
     epochs_acc = np.arange(1, acc_stack.shape[1] + 1)
 
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig_loss, ax_loss = plt.subplots(figsize=(8, 5))
+    fig_acc, ax_acc = plt.subplots(figsize=(8, 5))
 
-    for idx, name in enumerate(fold_names):
-        axes[0].plot(
+    for idx, _ in enumerate(fold_names):
+        ax_loss.plot(
             np.arange(1, len(train_loss[idx]) + 1),
             train_loss[idx],
             alpha=0.25,
             linewidth=1,
             color="tab:blue",
         )
-        axes[0].plot(
+        ax_loss.plot(
             np.arange(1, len(val_loss[idx]) + 1),
             val_loss[idx],
             alpha=0.25,
             linewidth=1,
             color="tab:orange",
         )
-        axes[1].plot(
+        ax_acc.plot(
             np.arange(1, len(val_acc[idx]) + 1),
             val_acc[idx],
             alpha=0.25,
             linewidth=1,
-            label=name,
+            color="tab:green",
         )
 
     train_mean = np.nanmean(train_stack, axis=0)
@@ -114,8 +115,8 @@ def _plot_training_curves(folds, out_dir: Path):
     acc_mean = np.nanmean(acc_stack, axis=0)
     acc_std = np.nanstd(acc_stack, axis=0)
 
-    axes[0].plot(epochs_loss, train_mean, color="tab:blue", linewidth=2.5, label="Train mean")
-    axes[0].fill_between(
+    ax_loss.plot(epochs_loss, train_mean, color="tab:blue", linewidth=2.5, label="Train mean")
+    ax_loss.fill_between(
         epochs_loss,
         train_mean - train_std,
         train_mean + train_std,
@@ -123,8 +124,8 @@ def _plot_training_curves(folds, out_dir: Path):
         alpha=0.15,
         label="Train ± std",
     )
-    axes[0].plot(epochs_loss, val_mean, color="tab:orange", linewidth=2.5, label="Val mean")
-    axes[0].fill_between(
+    ax_loss.plot(epochs_loss, val_mean, color="tab:orange", linewidth=2.5, label="Val mean")
+    ax_loss.fill_between(
         epochs_loss,
         val_mean - val_std,
         val_mean + val_std,
@@ -132,14 +133,14 @@ def _plot_training_curves(folds, out_dir: Path):
         alpha=0.15,
         label="Val ± std",
     )
-    axes[0].set_title("Loss curves")
-    axes[0].set_xlabel("Epoch")
-    axes[0].set_ylabel("Loss")
-    axes[0].grid(alpha=0.25)
-    axes[0].legend()
+    ax_loss.set_title("Loss curves")
+    ax_loss.set_xlabel("Epoch")
+    ax_loss.set_ylabel("Loss")
+    ax_loss.grid(alpha=0.25)
+    ax_loss.legend()
 
-    axes[1].plot(epochs_acc, acc_mean, color="tab:green", linewidth=2.5, label="Val acc mean")
-    axes[1].fill_between(
+    ax_acc.plot(epochs_acc, acc_mean, color="tab:green", linewidth=2.5, label="Val acc mean")
+    ax_acc.fill_between(
         epochs_acc,
         acc_mean - acc_std,
         acc_mean + acc_std,
@@ -147,15 +148,19 @@ def _plot_training_curves(folds, out_dir: Path):
         alpha=0.2,
         label="Val acc ± std",
     )
-    axes[1].set_title("Validation accuracy")
-    axes[1].set_xlabel("Epoch")
-    axes[1].set_ylabel("Accuracy (%)")
-    axes[1].grid(alpha=0.25)
-    axes[1].legend()
+    ax_acc.set_title("Validation accuracy")
+    ax_acc.set_xlabel("Epoch")
+    ax_acc.set_ylabel("Accuracy (%)")
+    ax_acc.grid(alpha=0.25)
+    ax_acc.legend()
 
-    fig.tight_layout()
-    fig.savefig(out_dir / "training_curves.png", dpi=200, bbox_inches="tight")
-    plt.close(fig)
+    fig_loss.tight_layout()
+    fig_loss.savefig(out_dir / "loss_curves.png", dpi=200, bbox_inches="tight")
+    plt.close(fig_loss)
+
+    fig_acc.tight_layout()
+    fig_acc.savefig(out_dir / "accuracy_curves.png", dpi=200, bbox_inches="tight")
+    plt.close(fig_acc)
 
 
 def _plot_fold_metrics(folds, evaluation, out_dir: Path):

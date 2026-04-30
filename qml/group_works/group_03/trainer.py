@@ -2,6 +2,7 @@ import json
 import os
 import time
 import copy
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.optim as optim
@@ -68,6 +69,39 @@ class Trainer:
         self.model = model
         self._initial_model_state = copy.deepcopy(self.model.state_dict())
         self.postfix_update_interval = 20
+
+    def _save_confusion_matrix_mean_pm_std_image(self, confusion_mean, confusion_std):
+        num_classes = confusion_mean.shape[0]
+        fig, ax = plt.subplots(figsize=(10, 8))
+        im = ax.imshow(confusion_mean, cmap="Blues")
+        fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label="Mean count")
+
+        ax.set_title("Confusion Matrix (Mean +- Std across folds)")
+        ax.set_xlabel("Predicted label")
+        ax.set_ylabel("True label")
+        ax.set_xticks(np.arange(num_classes))
+        ax.set_yticks(np.arange(num_classes))
+
+        threshold = float(np.max(confusion_mean)) * 0.5 if confusion_mean.size else 0.0
+        for row in range(num_classes):
+            for col in range(num_classes):
+                value = confusion_mean[row, col]
+                std_value = confusion_std[row, col]
+                text_color = "white" if value > threshold else "black"
+                ax.text(
+                    col,
+                    row,
+                    f"{value:.1f}\n+-{std_value:.1f}",
+                    ha="center",
+                    va="center",
+                    color=text_color,
+                    fontsize=8,
+                )
+
+        fig.tight_layout()
+        out_path = os.path.join(self.results_path, "confusion_matrix_mean_pm_std.png")
+        fig.savefig(out_path, dpi=200, bbox_inches="tight")
+        plt.close(fig)
 
     def _model_path(self, fold):
         return os.path.join(self.results_path, f"model_fold_{fold + 1}.pth")
@@ -323,20 +357,38 @@ class Trainer:
         print(f"{'#' * 35}")
 
         test_accs = []
+        confusion_matrices = []
         for fold in range(1, self.n_folds + 1):
             load_path = os.path.join(self.results_path, f"model_fold_{fold}.pth")
             self.model.load_state_dict(torch.load(load_path, map_location=self.device))
             self.model.eval()
             correct = 0
+            all_preds = []
+            all_labels = []
             with torch.no_grad():
                 for imgs, lbls in test_loader:
                     imgs = imgs.to(self.device, non_blocking=True)
                     lbls = lbls.to(self.device, non_blocking=True)
-                    correct += (self.model(imgs).argmax(1) == lbls).sum().item()
+                    preds = self.model(imgs).argmax(1)
+                    correct += (preds == lbls).sum().item()
+                    all_preds.append(preds.cpu())
+                    all_labels.append(lbls.cpu())
 
             t_acc = 100 * correct / len(test_dataset)
             test_accs.append(t_acc)
             print(f"Model Fold {fold} | Test Acc: {t_acc:.2f}%")
+
+            labels_np = torch.cat(all_labels).numpy()
+            preds_np = torch.cat(all_preds).numpy()
+            num_classes = int(max(labels_np.max(), preds_np.max()) + 1)
+            fold_confusion = np.zeros((num_classes, num_classes), dtype=np.int64)
+            np.add.at(fold_confusion, (labels_np, preds_np), 1)
+            confusion_matrices.append(fold_confusion)
+
+        confusion_stack = np.stack(confusion_matrices, axis=0).astype(np.float64)
+        confusion_mean = confusion_stack.mean(axis=0)
+        confusion_std = confusion_stack.std(axis=0)
+        self._save_confusion_matrix_mean_pm_std_image(confusion_mean, confusion_std)
 
         evaluation_metrics = {
             "test_acc_per_fold": test_accs,
