@@ -1,5 +1,9 @@
 __all__ = []
 
+from . import experiment
+__all__.extend( experiment.__all__ )
+from .experiment import *
+
 from . import loaders
 __all__.extend( loaders.__all__ )
 from .loaders import *
